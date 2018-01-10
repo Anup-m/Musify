@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/notification_icon_small"/>
+        <TextView
+            android:id="@+id/noti_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Musify"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/icon"/>
+
+        <ImageView
+            android:id="@+id/changeViewDown"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/noti_title"
+            android:src="@drawable/ic_mc_down_arrow"
+            android:tint="@color/colorGrey"/>
+
+        <TextView
+            android:id="@+id/noti_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shape of You"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:layout_below="@+id/noti_title"/>
+
+        <TextView
+            android:id="@+id/noti_song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noti_song_name"
+            android:text="Ed Shareen"
+            android:layout_marginTop="2dp"/>
+
+        <LinearLayout
+            android:id="@+id/controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toEndOf="@+id/noti_song_artist"
+            android:layout_below="@+id/noti_title"
+            android:layout_marginTop="12dp">
+
+            <ImageButton
+                android:id="@+id/noti_previous"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_p_previous"
+                android:layout_weight="1"
+                android:tint="@color/colorDeepGrey"
+                android:backgroundTint="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/noti_play_pause"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_p_pause"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:tint="@color/colorDeepGrey"
+                android:backgroundTint="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/noti_next"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_p_next"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:tint="@color/colorDeepGrey"
+                android:backgroundTint="@android:color/transparent"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/noti_album_art"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="AlbumArtOfSong"
+            android:src="@drawable/default_album_art"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:foregroundGravity="center_horizontal"
+            android:layout_marginStart="16dp"/>
+
+    </RelativeLayout>
+
+    <!---
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.3">
+
+        <ImageButton
+            android:id="@+id/noti_album_art"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="AlbumArtOfSong"
+            android:src="@drawable/default_album_art" />
+
+    </LinearLayout>
+     -->
+
+</LinearLayout>

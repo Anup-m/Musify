@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Musify</string>
+    <string name="image_view_text">AlbumArt</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_add_favourite">Add to Favourites</string>
+    <string name="action_play_next">Play Next</string>
+    <string name="action_share">Share</string>
+    <string name="action_details">Details</string>
+    <string name="action_delete">Delete from device</string>
+    <string name="action_set_ringtone">Set As Ringtone</string>
+    <string name="action_sleep_timer">Sleep Timer</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_search">Musify</string>
+    <string name="shuffle_all">Shuffle All</string>
+    <string name="filter">Filter</string>
+    <string name="new_playlist">Playlists</string>
+    <string name="ringtone_set">Ringtone Set</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Strings related to Audio Focus Settings -->
+    <string name="title_monitor_audio_focus">Monitor Audio Focus Changes</string>
+    <string name="monitor_audio_focus">monitor_audio_focus_changes</string>
+    <string name="summary_monitor_audio_focus">Reduce volume on focus loss\n(Notification, Games,etc)</string>
+
+    <!-- Strings related to Ignore Short Tracks Settings -->
+    <string name="ignore_short_tracks">ignore_short_tracks</string>
+    <string name="title_ignore_short_tracks">Ignore Short Tracks</string>
+    <string name="summary_ignore_short_tracks">Less than 60 seconds (Notifications,etc)</string>
+
+    <!-- Strings related to Music Folders Settings -->
+    <string name="music_folders">music_folders</string>
+    <string name="title_music_folders">Music Folders</string>
+    <string name="summary_music_folders">Select folders to be used for library</string>
+
+    <!-- Strings related to Filter Music Settings -->
+    <string name="filter_music">filter_music</string>
+    <string name="title_filter_music">Filter Music</string>
+    <string name="summary_filter_music">Enable switch to filter music based on (Name, extension)</string>
+
+    <!-- Strings related to Filter By Name Settings -->
+    <string name="filter_by_name">filter_by_name</string>
+    <string name="title_filter_by_name">Filter By Name</string>
+    <string name="dailog_title_filter_by_name">Filter By Name</string>
+    <string name="dailog_mssage_filter_by_name">Enter Name(s) separated by \',\'</string>
+
+    <!-- Strings related to Filter By Extension Settings -->
+    <string name="filter_by_extension">filter_by_extension</string>
+    <string name="title_filter_by_extension">Filter By Extension</string>
+    <string name="dailog_title_filter_by_extension">Filter By Extension</string>
+    <string name="dailog_mssage_filter_by_extension">Enter Extension(s) separated by \',\'</string>
+
+    <!-- Strings related to Sleep Timer Settings -->
+    <string name="sleep_timer">sleep_timer</string>
+    <string name="sleep_time_remaining">sleep_time_remaining</string>
+    <string name="title_sleep_timer">Set Sleep Timer</string>
+    <string name="summary_sleep_timer">off</string>
+    <string name="summary_about">This music player is still in its devlopment phase</string>
+
+    <!-- Strings related to About Musify Settings -->
+    <string name="app_version">1.2</string>
+    <string name="title_version">Version</string>
+
+
+    <!-- Strings related to Music Folders Settings -->
+    <string name="shuffle_music">Shuffle</string>
+
+</resources>
+
+
+
+
+

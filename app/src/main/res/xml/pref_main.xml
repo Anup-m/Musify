@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Play">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/monitor_audio_focus"
+            android:title="@string/title_monitor_audio_focus"
+            android:summary="@string/summary_monitor_audio_focus"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Scan">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/ignore_short_tracks"
+            android:title="@string/title_ignore_short_tracks"
+            android:summary="@string/summary_ignore_short_tracks"/>
+
+        <MultiSelectListPreference
+            android:key="@string/music_folders"
+            android:summary="@string/summary_music_folders"
+            android:title="@string/title_music_folders" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Filter">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/filter_music"
+            android:title="@string/title_filter_music"
+            android:summary="@string/summary_filter_music"/>
+
+        <EditTextPreference
+            android:defaultValue=" "
+            android:key="@string/filter_by_name"
+            android:title="@string/title_filter_by_name"
+            android:dependency="@string/filter_music"
+            android:dialogTitle="@string/dailog_title_filter_by_name"
+            android:dialogMessage="@string/dailog_mssage_filter_by_name"/>
+
+        <EditTextPreference
+            android:defaultValue=" "
+            android:key="@string/filter_by_extension"
+            android:title="@string/title_filter_by_extension"
+            android:dependency="@string/filter_music"
+            android:dialogTitle="@string/dailog_title_filter_by_extension"
+            android:dialogMessage="@string/dailog_mssage_filter_by_extension"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Sleep Timer">
+    <ListPreference
+        android:defaultValue="00"
+        android:key="@string/sleep_timer"
+        android:title="@string/title_sleep_timer"
+        android:summary="%s"
+        android:dialogTitle="@string/title_sleep_timer"
+        android:entries="@array/pref_sleep_timer_entries"
+        android:entryValues="@array/pref_sleep_timer_values"
+        />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About Musify">
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/summary_about" />
+
+        <Preference
+            android:summary="@string/app_version"
+            android:title="@string/title_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
+
+
+
+<!---
+
+     <ListPreference
+        android:key="@string/music_folders"
+        android:summary="@string/summary_music_folders"
+        android:title="@string/title_music_folders" />
+
+-->

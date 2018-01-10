@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/pCurrDur"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight=".5"
+            android:gravity="center"
+            android:text="00:00"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"/>
+
+        <SeekBar
+            android:id="@+id/pSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="3"
+            android:max="10"
+            android:progress="0"
+            />
+
+        <TextView
+            android:id="@+id/pTotalDur"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="30dp"
+            android:gravity="right|center"
+            android:text="5:00"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@android:color/holo_blue_light">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/pRepeat"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:background="#ffffff"
+                android:tint="@color/colorGrey"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:src="@drawable/ic_p_repeat"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/pPrevious"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginLeft="30dp"
+                android:background="#ffffff"
+                android:tint="@android:color/black"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:src="@drawable/ic_p_previous"
+                android:layout_gravity="center"/>
+
+
+            <ImageButton
+                android:id="@+id/pPause"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginLeft="30dp"
+                android:background="#ffffff"
+                android:tint="@android:color/black"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:src="@drawable/ic_p_pause"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/pNext"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginLeft="30dp"
+                android:background="#ffffff"
+                android:tint="@android:color/black"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:src="@drawable/ic_p_next"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/pShuffle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginLeft="30dp"
+                android:background="#ffffff"
+                android:tint="@color/colorGrey"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:src="@drawable/ic_p_shuffle"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/pSongName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Shape Of You"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"
+            />
+
+        <TextView
+            android:id="@+id/pArtistName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Ed Sheeran"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+</LinearLayout>

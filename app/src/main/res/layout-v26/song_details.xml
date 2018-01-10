@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/file_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Path:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/file_path1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/storage/folder/file"
+        android:layout_toEndOf="@+id/file_path"
+        android:layout_marginStart="5dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="20sp"
+        android:autoSizeMaxTextSize="50sp"
+        android:autoSizeStepGranularity="5sp"/>
+
+
+    <TextView
+        android:id="@+id/file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_path"
+        android:layout_marginTop="40dp"
+        android:text="File Name:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/file_name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shape of you"
+        android:layout_below="@+id/file_path"
+        android:layout_toEndOf="@+id/file_name"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="5dp" />
+
+
+    <TextView
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_name"
+        android:layout_marginTop="32dp"
+        android:text="Size:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/size1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_name"
+        android:layout_marginTop="32dp"
+        android:text="5 MB"
+        android:layout_toEndOf="@+id/size"
+        android:layout_marginStart="5dp" />
+
+
+    <TextView
+        android:id="@+id/length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/size"
+        android:layout_marginTop="18dp"
+        android:text="Length:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/length1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/size"
+        android:layout_marginTop="18dp"
+        android:text="05:02"
+        android:layout_toEndOf="@+id/length"
+        android:layout_marginStart="5dp" />
+
+    <TextView
+        android:id="@+id/bitrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/length"
+        android:layout_marginTop="18dp"
+        android:text="Bitrate:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/bitrate1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/length"
+        android:layout_marginTop="18dp"
+        android:text="320 kbps"
+        android:layout_toEndOf="@+id/bitrate"
+        android:layout_marginStart="5dp" />
+
+    <TextView
+        android:id="@+id/format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bitrate"
+        android:layout_marginTop="18dp"
+        android:text="Format:"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/format1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bitrate"
+        android:layout_marginTop="18dp"
+        android:text="MPEG"
+        android:layout_toEndOf="@+id/format"
+        android:layout_marginStart="5dp" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/format"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:text="OK"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentEnd="true" />
+
+
+
+
+</RelativeLayout>
