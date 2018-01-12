@@ -64,8 +64,13 @@
     <string name="title_version">Version</string>
 
 
-    <!-- Strings related to Music Folders Settings -->
+    <!-- Strings related to PlayerActivity -->
+
+    <!-- Strings related to Shuffle -->
     <string name="shuffle_music">Shuffle</string>
+    <!-- Strings related to Repeat -->
+    <string name="repeat_music">Repeat</string>
+
 
 </resources>
 

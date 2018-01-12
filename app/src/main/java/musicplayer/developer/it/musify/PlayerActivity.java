@@ -5,17 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,25 +28,28 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.security.AccessController.getContext;
-
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
+
+    Context context;
+    static boolean checkIfPlayerUiNeedsToUpdate = false;
+    static boolean isPlaying = false;
+    //static int repeatCount = 0;
+
     LinearLayout playerLayout;
-    ImageButton btnDock, btnQueueMusic, btnFav, btnVol, btnShuffle, btnPrev, btnPlayPause, btnNext, btnRepeat;
+    ImageButton btnShuffle, btnPrev, btnPlayPause, btnNext, btnRepeat, btnDock, btnQueueMusic, btnFav, btnVol;
     ImageView albumArt;
     SeekBar seekBar;
     TextView songName, artistName, currDur, totalDur;
 
-    SongsListActivity songsListActivity;
-    ImageLoader imageLoader;
-    Context context;
-    static boolean checkIfPlayerUiNeedsToUpdate = false;
-    static boolean isPlaying = false;
+    ImageLoader imageLoader; //class for lazy loading images into an imageView...
 
     private Handler myHandler = new Handler();
-    private Uri albumArtUri;
-    private Bitmap albumArtBitmap;
+
+    //private Uri albumArtUri;
+    //private Bitmap albumArtBitmap;
+    //SongsListActivity songsListActivity;
+
 
 
     @Override
@@ -56,7 +58,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_player);
 
         initializeFields();
-        setSongData();
+        updatePlayerUI();
 
         btnShuffle.setOnClickListener(this);
         btnPrev.setOnClickListener(this);
@@ -91,18 +93,18 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
             public void onSwipeRight(){
                 playNext();
-                setSongData();
+                updatePlayerUI();
             }
             public void onSwipeLeft(){
                 playPrev();
-                setSongData();
+                updatePlayerUI();
             }
         });
     }
 
     private void initializeFields(){
-       context = getApplicationContext();
-       imageLoader = new ImageLoader(context);
+        context = getApplicationContext();
+        imageLoader = new ImageLoader(context);
 
         playerLayout = findViewById(R.id.player_layout);
 
@@ -120,87 +122,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
         albumArt = (ImageView) findViewById(R.id.pAlbumArt);
         seekBar = (SeekBar)findViewById(R.id.pSeekBar);
+
+//        //sharedPreference data for shuffle
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        SongsListActivity.isShuffleOn = sharedPreferences.getBoolean(getString(R.string.shuffle_music), false);
+//        SongsListActivity.repeatCount = sharedPreferences.getInt(getString(R.string.repeat_music),0);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.pShuffle:
-                if(SongsListActivity.isShuffleOn){
-                    SongsListActivity.isShuffleOn = false;
-                    btnShuffle.setColorFilter(Color.GRAY);
-                    addToPreference(SongsListActivity.isShuffleOn);
-                }
-                else {
-                    SongsListActivity.isShuffleOn = true;
-                    btnShuffle.setColorFilter(Color.BLACK);
-                }
-                break;
-            case R.id.pPrevious:
-                playPrev();
-                break;
-            case R.id.pPause:
-                if(SongsListActivity.mediaPlayer.isPlaying())
-                    pause();
-                else
-                    resume();
-                break;
-            case R.id.pNext:
-                playNext();
-                break;
-            case R.id.pRepeat:
-                break;
+    private void updatePlayerUI() {
 
-        }
-        Utility.recallNotificationBuilder(context);
-    }
-
-    private void addToPreference(boolean isShuffleOn) {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shuffle_music),Context.MODE_PRIVATE);
-        SharedPreferences.Editor shuffleMusicEditor = sharedPreferences.edit();
-        shuffleMusicEditor.putBoolean(getString(R.string.sleep_timer),isShuffleOn);
-    }
-
-    private void playNext() {
-        SongsListActivity.playNext();
-        SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
-        SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition,context);
-        SongsListActivity.checkIfUiNeedsToUpdate = true;
-        setSongData();
-    }
-
-    private void playPrev() {
-        SongsListActivity.playPrevious();
-        SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
-        SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition,context);
-        SongsListActivity.checkIfUiNeedsToUpdate = true;
-        setSongData();
-    }
-
-    private void pause() {
-        SongsListActivity.mediaPlayer.pause();
-        btnPlayPause.setImageDrawable((getResources().getDrawable(R.drawable.ic_p_play)));
-        SongsListActivity.playedLength = SongsListActivity.mediaPlayer.getCurrentPosition();
-        //SongsListActivity.checkIfUiNeedsToUpdate = true;
-        isPlaying = false;
-    }
-
-    private void resume() {
-
-        isPlaying = true;
-        if(SongsListActivity.playedLength == -1) {
-            SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition + 1);
-            SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition + 1,context);
-        }
-        else {
-            SongsListActivity.mediaPlayer.seekTo(SongsListActivity.playedLength);
-            SongsListActivity.mediaPlayer.start();
-        }
-        //btnPlayPause.setImageDrawable((getResources().getDrawable(R.drawable.ic_p_pause)));
-        setSongData();
-    }
-
-    private void setSongData() {
+        //For PlayPause Button
         SongInfo songInfo;
         if(SongsListActivity.currSongPosition == -1) {
             if(!(isPlaying)) {
@@ -212,7 +143,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             else {
                 btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_pause));
             }
-
             songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition + 1);
         }
         else {
@@ -224,23 +154,34 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
         }
 
+        //For Shuffle Button
         if(SongsListActivity.isShuffleOn){
             btnShuffle.setColorFilter(Color.BLACK);
         }
 
+        //For Repeat Button
+        if(SongsListActivity.repeatCount == 0){
+            btnRepeat.setColorFilter(Color.GRAY);
+            btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeat));
+        }
+        else if(SongsListActivity.repeatCount == 1){
+            btnRepeat.setColorFilter(Color.BLACK);
+            btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeate_one));
+        }
+        else {
+            btnRepeat.setColorFilter(Color.BLACK);
+            btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeat));
+        }
+
+        //For TextBoxes like songName & artistName..
         songName.setText(songInfo.getSongName());
         artistName.setText(songInfo.getArtistName());
 
-//        albumArtUri = Uri.parse("content://media/external/audio/media/"+songInfo.getSongId()+"");
-//        albumArtBitmap = Utility.getSongAlbumArt(context,albumArtUri);
-//        if(albumArtBitmap != null)
-//            albumArt.setImageBitmap(albumArtBitmap);
-//        else
-//            albumArt.setImageDrawable(getResources().getDrawable(R.drawable.default_album_art));
-
+        //For albumArt
         String uri = "content://media/external/audio/media/"+songInfo.getSongId()+"";
         imageLoader.DisplayImage(uri,albumArt);
 
+        //For seekBar
         try {
             Thread.sleep(500);
             setSeekBar();
@@ -268,7 +209,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             seekBar.setProgress(currTime);
 
             if(checkIfPlayerUiNeedsToUpdate) {
-                setSongData();
+                updatePlayerUI();
                 checkIfPlayerUiNeedsToUpdate = false;
             }
 
@@ -277,6 +218,150 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             myHandler.postDelayed(this, 100);
         }
     };
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.pShuffle:
+                shuffle(SongsListActivity.isShuffleOn);
+                break;
+            case R.id.pPrevious:
+                playPrev();
+                break;
+            case R.id.pPause:
+                if(SongsListActivity.mediaPlayer.isPlaying())
+                    pause();
+                else
+                    resume();
+                break;
+            case R.id.pNext:
+                playNext();
+                break;
+            case R.id.pRepeat:
+                if(SongsListActivity.repeatCount != 2)
+                    SongsListActivity.repeatCount++;
+                else
+                    SongsListActivity.repeatCount = 0;
+                repeat(SongsListActivity.repeatCount);
+                break;
+
+        }
+        Utility.recallNotificationBuilder(context);
+    }
+
+    private void shuffle(boolean isShuffleOn) {
+        if(isShuffleOn){
+            SongsListActivity.isShuffleOn = false;
+            btnShuffle.setColorFilter(Color.GRAY);
+            Toast.makeText(this,"Shuffle off",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            SongsListActivity.isShuffleOn = true;
+            btnShuffle.setColorFilter(Color.BLACK);
+            Toast.makeText(this,"Shuffle on",Toast.LENGTH_SHORT).show();
+
+            if(SongsListActivity.repeatCount != 0) {
+                SongsListActivity.repeatCount = 0;
+                addRepeatPreference(SongsListActivity.repeatCount);
+                btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeat));
+                btnRepeat.setColorFilter(Color.GRAY);
+            }
+        }
+        addToPreference(SongsListActivity.isShuffleOn);
+    }
+
+    private void repeat(int repeatCount) {
+        switch (repeatCount){
+            case 0:
+                btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeat));
+                btnRepeat.setColorFilter(Color.GRAY);
+                Toast.makeText(this,"Repeat off",Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SongsListActivity.isShuffleOn = sharedPreferences.getBoolean(getString(R.string.shuffle_music), false);
+
+                if(SongsListActivity.isShuffleOn) {
+                    SongsListActivity.isShuffleOn = false;
+                    addToPreference(SongsListActivity.isShuffleOn);
+                    btnShuffle.setColorFilter(Color.GRAY);
+                }
+
+                btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeate_one));
+                btnRepeat.setColorFilter(Color.BLACK);
+
+                Toast.makeText(this,"Repeat this song",Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                if(SongsListActivity.isShuffleOn){
+                    SongsListActivity.isShuffleOn = false;
+                    addToPreference(SongsListActivity.isShuffleOn);
+                    btnShuffle.setColorFilter(Color.GRAY);
+                }
+
+                btnRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_repeat));
+                btnRepeat.setColorFilter(Color.BLACK);
+
+                Toast.makeText(this,"Repeat all",Toast.LENGTH_SHORT).show();
+                break;
+        }
+        addRepeatPreference(repeatCount);
+    }
+
+    private void addRepeatPreference(int repeatCount) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor shuffleMusicEditor = sharedPreferences.edit();
+        shuffleMusicEditor.putInt(getString(R.string.repeat_music),repeatCount);
+        shuffleMusicEditor.apply();
+    }
+
+    private void addToPreference(boolean isShuffleOn) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor shuffleMusicEditor = sharedPreferences.edit();
+        shuffleMusicEditor.putBoolean(getString(R.string.shuffle_music),isShuffleOn);
+        shuffleMusicEditor.apply();
+    }
+
+    private void playNext() {
+        SongsListActivity.playNext();
+        SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+        SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition,context);
+        SongsListActivity.checkIfUiNeedsToUpdate = true;
+        updatePlayerUI();
+    }
+
+    private void playPrev() {
+        SongsListActivity.playPrevious();
+        SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+        SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition,context);
+        SongsListActivity.checkIfUiNeedsToUpdate = true;
+        updatePlayerUI();
+    }
+
+    private void pause() {
+        SongsListActivity.mediaPlayer.pause();
+        btnPlayPause.setImageDrawable((getResources().getDrawable(R.drawable.ic_p_play)));
+        SongsListActivity.playedLength = SongsListActivity.mediaPlayer.getCurrentPosition();
+        //SongsListActivity.checkIfUiNeedsToUpdate = true;
+        isPlaying = false;
+    }
+
+    private void resume() {
+
+        isPlaying = true;
+        if(SongsListActivity.playedLength == -1) {
+            SongInfo songInfo = SongsListActivity._songs.get(SongsListActivity.currSongPosition + 1);
+            SongsListActivity.playSong(songInfo,SongsListActivity.currSongPosition + 1,context);
+        }
+        else {
+            SongsListActivity.mediaPlayer.seekTo(SongsListActivity.playedLength);
+            SongsListActivity.mediaPlayer.start();
+        }
+        //btnPlayPause.setImageDrawable((getResources().getDrawable(R.drawable.ic_p_pause)));
+        updatePlayerUI();
+    }
+
 
     public static String findTotalDuration(Boolean setEndTime,long time){
         long millis;
@@ -413,6 +498,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
 
 /*
+
+
+//        albumArtUri = Uri.parse("content://media/external/audio/media/"+songInfo.getSongId()+"");
+//        albumArtBitmap = Utility.getSongAlbumArt(context,albumArtUri);
+//        if(albumArtBitmap != null)
+//            albumArt.setImageBitmap(albumArtBitmap);
+//        else
+//            albumArt.setImageDrawable(getResources().getDrawable(R.drawable.default_album_art));
 
 
 case R.id.action_delete:
