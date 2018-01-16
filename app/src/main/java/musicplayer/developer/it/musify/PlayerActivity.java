@@ -17,8 +17,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -304,7 +306,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(this,PlayingQueueActivity.class));
                 break;
             case R.id.pOverflow:
-
+                showPopupMenu(btnMenu);
                 break;
 
             case R.id.pBack:
@@ -483,58 +485,62 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.player_menu,menu);
-        return super.onCreateOptionsMenu(menu);
+    private void showPopupMenu(View view) {
+        //PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu(this,view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.player_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PlayerActivity.MyMenuItemClickListener());
+        popup.show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_share:
-                try {
-                    Utility.shareSong(context);
-                }catch (Exception e){
-                    Log.d("SHARE_DETAILS ERROR :",e.getMessage());
-                }
-                break;
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-            case R.id.action_add_favourite:
-                try {
-                    SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
-                    Utility.addToFavouriteList(context,songObj);
-                    Toast.makeText(context, "Added to favourite", Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    Log.d("FAVOURITE ERROR :",e.getMessage());
-                }
-                break;
+        public MyMenuItemClickListener() {}
 
-            case R.id.action_set_ringtone:
-                try {
-                    SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
-                    long id = songObj.getSongId();
-                    //Utility.setRingtone(context,id);
-                    //Utility.setAsRingtone(context,songObj);
-                    getPermission(id);
-                   // Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    Log.d("SETTING RINGTONE ERROR:",e.getMessage());
-                }
-                break;
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
 
-            case R.id.action_rename:
-                Toast.makeText(this,"Feature under devlopment!!..",Toast.LENGTH_SHORT).show();
-                break;
+                case R.id.action_share:
+                    try {
+                        Utility.shareSong(context);
+                    }catch (Exception e){
+                        Log.d("SHARE_DETAILS ERROR :",e.getMessage());
+                    }
+                    break;
 
-            case R.id.action_settings:
-                startActivity(new Intent(this,SettingsActivity.class));
-                break;
+                case R.id.action_add_favourite:
+                    favourites();
+                    break;
 
-            default:
-                return super.onOptionsItemSelected(item);
+                case R.id.action_set_ringtone:
+                    setRingTone();
+                    break;
+
+                case R.id.action_rename:
+                    Toast.makeText(getApplicationContext(),"Feature under devlopment!!..",Toast.LENGTH_SHORT).show();
+                    break;
+
+                case R.id.action_settings:
+                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                    break;
+
+                default:
+            }
+                return false;
         }
-        return false;
+    }
+
+    private void setRingTone(){
+        try {
+            SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+            long id = songObj.getSongId();
+            getPermission(id);
+        }catch (Exception e){
+            Log.d("SETTING RINGTONE ERROR:",e.getMessage());
+        }
+
     }
 
     private void checkPermission(long id){
@@ -629,6 +635,63 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
         return Color.rgb(R / n, G / n, B / n);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.player_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                try {
+                    Utility.shareSong(context);
+                }catch (Exception e){
+                    Log.d("SHARE_DETAILS ERROR :",e.getMessage());
+                }
+                break;
+
+            case R.id.action_add_favourite:
+                try {
+                    SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+                    Utility.addToFavouriteList(context,songObj);
+                    Toast.makeText(context, "Added to favourite", Toast.LENGTH_SHORT).show();
+                }catch (Exception e){
+                    Log.d("FAVOURITE ERROR :",e.getMessage());
+                }
+                break;
+
+            case R.id.action_set_ringtone:
+                try {
+                    SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+                    long id = songObj.getSongId();
+                    //Utility.setRingtone(context,id);
+                    //Utility.setAsRingtone(context,songObj);
+                    getPermission(id);
+                    // Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+                }catch (Exception e){
+                    Log.d("SETTING RINGTONE ERROR:",e.getMessage());
+                }
+                break;
+
+            case R.id.action_rename:
+                Toast.makeText(this,"Feature under devlopment!!..",Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_settings:
+                startActivity(new Intent(this,SettingsActivity.class));
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return false;
+    }
+
+
+
 
 }
 
