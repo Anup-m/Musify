@@ -7,18 +7,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorWhite"
     tools:context="musicplayer.developer.it.musify.PlayerActivity">
 
-    <ImageButton
-        android:id="@+id/pAlbumArt"
-        android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:id="@+id/pAlbumArtContainer"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:src="@drawable/default_album_art_new"
-        android:background="@color/colorDeepGrey"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
-        android:backgroundTint="@android:color/transparent"/>
+        android:backgroundTint="@android:color/transparent"
+        android:background="@color/colorDeepGrey">
+
+        <ImageView
+            android:id="@+id/pAlbumArt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/default_album_art_new"
+            android:background="@color/colorDeepGrey"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@android:color/transparent" />
+
+        <ImageView
+            android:id="@+id/pBack"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="20dp"
+            android:background="@null"
+            android:tint="@color/colorWhite"
+            android:src="@drawable/ic_p_back"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:id="@+id/pFavourits"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:background="@null"
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_p_favourite"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/pPlayingQueue"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_p_playing_queue"
+                android:layout_gravity="center"/>
+
+
+            <ImageView
+                android:id="@+id/pOverflow"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_dots"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 
     <include
         android:id="@+id/player_media_controller"
@@ -31,4 +98,16 @@
 
 <!---
 android:scaleType="centerCrop"
+
+<ImageButton
+        android:id="@+id/pAlbumArt"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/default_album_art_new"
+        android:background="@color/colorDeepGrey"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@android:color/transparent"/>
+
 -->

@@ -64,6 +64,11 @@ public class Utility {
         favourites.save(favourite_songs);
     }
 
+    public static void removeFromFavouriteList(Context context, SongInfo songInfo){
+        Favourites favourites = new Favourites(context);
+        favourites.remove(songInfo.getSongName());
+    }
+
     public static void addLastPlayedSongDetails(Context context, SongInfo songInfo, int length,int radioChecked){
         LastPlayedSong lastPlayedSong = new LastPlayedSong(context);
         lastPlayedSong.save(songInfo,length,radioChecked);
@@ -81,12 +86,6 @@ public class Utility {
         ArrayList<String> filterByNameList = null;
         ArrayList<String> filterByExtensionList = null;
         Set<String> filteredFoldersList = null;
-
-//        Set<String> defaultValue = new HashSet<>();
-//        for(int i = 0; i < musicFoldersList.size(); i++){
-//            String s = String.valueOf(i);
-//            defaultValue.add(s);
-//        }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String filterByName = sharedPreferences.getString("filter_by_name", " ");
@@ -284,7 +283,7 @@ public class Utility {
                 mmr.setDataSource(path);
                 byte[] artBytes = mmr.getEmbeddedPicture();
                 if (artBytes != null) {
-                    InputStream is = new ByteArrayInputStream(artBytes);
+                    //InputStream is = new ByteArrayInputStream(artBytes);
                     bm = BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length);
                 }
             }

@@ -54,6 +54,21 @@ public class ImageLoader {
         }
     }
 
+    public boolean displayImage(String url, ImageView imageView) {
+        boolean isAlbumArtPresent = false;
+        imageViews.put(imageView, url);
+        Bitmap bitmap = memoryCache.get(url);
+        if(bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+            isAlbumArtPresent = true;
+        }
+        else {
+            queuePhoto(url, imageView);
+            imageView.setImageResource(stub_id);
+        }
+        return isAlbumArtPresent;
+    }
+
     private void queuePhoto(String url, ImageView imageView) {
         PhotoToLoad p = new PhotoToLoad(url, imageView);
         executorService.submit(new PhotosLoader(p));

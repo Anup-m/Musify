@@ -1,22 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/player_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="musicplayer.developer.it.musify.PlayerActivity">
 
-    <Button
-        android:id="@+id/button2"
+    <RelativeLayout
+        android:id="@+id/pAlbumArtContainer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
-        tools:layout_editor_absoluteX="113dp"
-        tools:layout_editor_absoluteY="105dp" />
+        android:layout_height="wrap_content">
 
-    <EditText
+        <ImageView
+            android:id="@+id/pAlbumArt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/default_album_art_new"
+            android:background="@color/colorDeepGrey"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="20dp"
+            android:layout_alignParentEnd="true">
+
+            <ImageButton
+                android:id="@+id/pFavourits"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:background="@null"
+                android:tint="@color/colorGrey"
+                android:src="@drawable/ic_p_favourite"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/pPlayingQueue"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:tint="@color/colorGrey"
+                android:src="@drawable/ic_p_playing_queue"
+                android:layout_gravity="center"/>
+
+
+                <ImageButton
+                    android:id="@+id/pOverflow"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@null"
+                    android:tint="@color/colorGrey"
+                    android:src="@drawable/ic_dots"
+                    android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="hsakfhahfla"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="139dp"
+        android:layout_marginEnd="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_p_shuffle" />
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/player_media_controller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/player_media_controller"
+        android:layout_below="@+id/pAlbumArtContainer"/>
+
+</RelativeLayout>
+
+    <!---
+    android:scaleType="centerCrop"
+    -->

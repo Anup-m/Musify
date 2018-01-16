@@ -51,15 +51,15 @@ import java.util.Random;
 
 public class SongsListActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener,MusicFocusable,SearchView.OnQueryTextListener{
 
-    static ArrayList<SongInfo> _songs = new ArrayList<>();
-    static ArrayList<Integer> random_list = new ArrayList<>();
-    static ArrayList<String> favourite_list = new ArrayList<>();
-    private static boolean isPrep = false;
+    public static ArrayList<SongInfo> _songs = new ArrayList<>();
+    public static ArrayList<Integer> random_list = new ArrayList<>();
+    public static ArrayList<String> favourite_list = new ArrayList<>();
+    public static boolean isPrep = false;
     RecyclerView recyclerView;
     static SongAdapter songAdapter;
     static MediaPlayer mediaPlayer;
-    static int currSongPosition = -1, playedLength = -1,repeatCount = 0;
-    static boolean checkIfUiNeedsToUpdate = false, isShuffleOn = false;
+    public static int currSongPosition = -1, playedLength = -1,repeatCount = 0;
+    public static boolean checkIfUiNeedsToUpdate = false, isShuffleOn = false;
     String lastPlayedSongName, lastPlayedSongDetails;
 
     ImageButton btn_up,btn_playPause;
@@ -110,7 +110,7 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
         recyclerView.setAdapter(songAdapter);
 
         initializeFields();
-        getFavouriteList();
+        //getFavouriteList();
 
 
         songAdapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
@@ -173,6 +173,9 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
         Favourites favourites = new Favourites(context);
         SharedPreferences preferences = getSharedPreferences(favourites.fileName,Context.MODE_PRIVATE);
         favourite_list = favourites.load();
+        for(String name : favourite_list){
+            Log.i("FavSong :",name);
+        }
     }
 
     private void getLastPlayedSongDetails(){
@@ -217,6 +220,7 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
         seekBar = findViewById(R.id.mCSeekBar);
         songTitle = findViewById(R.id.mCSongName);
         songTitle.setSelected(true);
+
         mediaController = findViewById(R.id.mediaController);
 
         //Animations
@@ -312,12 +316,15 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
                     SongInfo songInfo = _songs.get(currSongPosition);
                     playSong(songInfo, currSongPosition, context);
                     PlayerActivity.checkIfPlayerUiNeedsToUpdate = true;
+
+                    PlayingQueueActivity.checkIfPlayingQueueUiNeedsToUpdate = true;
                 }
                 }
             });
 
             checkIfUiNeedsToUpdate = true;
             PlayerActivity.isPlaying = true;
+            PlayingQueueActivity.checkIfPlayingQueueUiNeedsToUpdate = true;
             Utility.recallNotificationBuilder(context);
             //NotificationGenerator.customNotification(context);
 
@@ -687,7 +694,7 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
         return true;
     }
 
-    public int getRealSongPosition(SongInfo obj){
+    public static int getRealSongPosition(SongInfo obj){
         int position = 0;
         for(SongInfo song : _songs){
             if(obj.equals(song)){
@@ -742,14 +749,15 @@ public class SongsListActivity extends AppCompatActivity implements View.OnLongC
         super.onDestroy();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        saveLastPlayedSongDetails();
-////        this.moveTaskToBack(true);
-////        android.os.Process.killProcess(android.os.Process.myPid());
-////        System.exit(1);
-//        super.onBackPressed();
-//    }
+    @Override
+    public void onBackPressed() {
+        saveLastPlayedSongDetails();
+        _songs = new ArrayList<>();
+        this.moveTaskToBack(true);
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        System.exit(1);
+        super.onBackPressed();
+    }
 
     private void saveLastPlayedSongDetails() {
         try {

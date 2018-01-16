@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="musicplayer.developer.it.musify.SongsListActivity">
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_layout"/>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+    <ListView
+        android:id="@+id/song_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"/>
+        android:layout_weight="1"/>
 
     <include
         android:id="@+id/mediaController"

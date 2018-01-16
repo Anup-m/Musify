@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorGrey">#FF888888</color>
     <color name="colorDeepGrey">#535353</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="sia">#c8000000</color>
+    <color name="gsdgs">#ff202020</color>
 </resources>

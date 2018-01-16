@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -15,13 +16,17 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +37,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
 
     Context context;
-    static boolean checkIfPlayerUiNeedsToUpdate = false;
-    static boolean isPlaying = false;
+    public static boolean checkIfPlayerUiNeedsToUpdate = false;
+    public static boolean isPlaying = false;
     //static int repeatCount = 0;
 
     LinearLayout playerLayout;
-    ImageButton btnShuffle, btnPrev, btnPlayPause, btnNext, btnRepeat, btnDock, btnQueueMusic, btnFav, btnVol;
+    //RelativeLayout playerLayout;
+    ImageButton btnShuffle, btnPrev, btnPlayPause, btnNext, btnRepeat, btnDock, btnVol;
+    ImageView btnFav, btnQueueMusic, btnMenu,btnBack;
     ImageView albumArt;
+
     SeekBar seekBar;
     TextView songName, artistName, currDur, totalDur;
 
@@ -50,11 +58,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     //private Bitmap albumArtBitmap;
     //SongsListActivity songsListActivity;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_player);
 
         initializeFields();
@@ -65,6 +73,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         btnPlayPause.setOnClickListener(this);
         btnNext.setOnClickListener(this);
         btnRepeat.setOnClickListener(this);
+
+        btnFav.setOnClickListener(this);
+        btnQueueMusic.setOnClickListener(this);
+        btnMenu.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean userTouch;
@@ -105,7 +118,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private void initializeFields(){
         context = getApplicationContext();
         imageLoader = new ImageLoader(context);
-
         playerLayout = findViewById(R.id.player_layout);
 
         btnRepeat = (ImageButton) findViewById(R.id.pRepeat);
@@ -114,6 +126,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         btnPlayPause = (ImageButton) findViewById(R.id.pPause);
         btnNext = (ImageButton) findViewById(R.id.pNext);
 
+        btnFav = findViewById(R.id.pFavourits);
+        btnQueueMusic = findViewById(R.id.pPlayingQueue);
+        btnMenu = findViewById(R.id.pOverflow);
+        btnBack = findViewById(R.id.pBack);
         songName = (TextView) findViewById(R.id.pSongName);
         artistName = (TextView)findViewById(R.id.pArtistName);
 
@@ -122,15 +138,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
         albumArt = (ImageView) findViewById(R.id.pAlbumArt);
         seekBar = (SeekBar)findViewById(R.id.pSeekBar);
-
-//        //sharedPreference data for shuffle
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        SongsListActivity.isShuffleOn = sharedPreferences.getBoolean(getString(R.string.shuffle_music), false);
-//        SongsListActivity.repeatCount = sharedPreferences.getInt(getString(R.string.repeat_music),0);
+        changeStatusBarColor();
+        getFavouriteList();
     }
 
     private void updatePlayerUI() {
-
         //For PlayPause Button
         SongInfo songInfo;
         if(SongsListActivity.currSongPosition == -1) {
@@ -180,6 +192,25 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         //For albumArt
         String uri = "content://media/external/audio/media/"+songInfo.getSongId()+"";
         imageLoader.DisplayImage(uri,albumArt);
+        //boolean isAlbumArtPresent = imageLoader.displayImage(uri,albumArt);
+
+        Bitmap bitmap = Utility.getSongAlbumArt(context,Uri.parse(uri));
+
+        if(bitmap != null) {
+
+            int vibrantColor = getVibrantColor(bitmap);
+
+            btnBack.setColorFilter(Color.BLACK);
+            btnFav.setColorFilter(Color.BLACK);
+            btnQueueMusic.setColorFilter(Color.BLACK);
+            btnMenu.setColorFilter(Color.BLACK);
+        }
+
+        //For FavouriteButton
+        if(SongsListActivity.favourite_list.contains(songInfo.getSongName())){
+            btnFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_favourite_recognised));
+        } else
+            btnFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_favourite));
 
         //For seekBar
         try {
@@ -220,6 +251,27 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     };
 
 
+
+    private int getVibrantColor(Bitmap bitmap){
+        final int[] abc = new int[3];
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+               Palette.Swatch textSwatch = palette.getVibrantSwatch();
+
+                if (textSwatch == null) {
+                    return;
+                }
+                abc[0] = textSwatch.getRgb();
+                abc[1] = textSwatch.getBodyTextColor();
+                abc[2] = textSwatch.getTitleTextColor();
+                //vibrantColor = textSwatch.getRgb();
+                changeStatusBarColor2(abc[0]);
+            }
+        });
+        return abc[0];
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -245,10 +297,48 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     SongsListActivity.repeatCount = 0;
                 repeat(SongsListActivity.repeatCount);
                 break;
+            case R.id.pFavourits:
+                favourites();
+                break;
+            case R.id.pPlayingQueue:
+                startActivity(new Intent(this,PlayingQueueActivity.class));
+                break;
+            case R.id.pOverflow:
 
+                break;
+
+            case R.id.pBack:
+                onBackPressed();
+                break;
         }
-        Utility.recallNotificationBuilder(context);
+        try {
+            Utility.recallNotificationBuilder(context);
+        }catch (Exception ignored) { }
+
     }
+
+    private void favourites() {
+        getFavouriteList();
+        SongInfo songObj = SongsListActivity._songs.get(SongsListActivity.currSongPosition);
+
+        for (String name : SongsListActivity.favourite_list) {
+            if (songObj.getSongName().equals(name)) {
+                Utility.removeFromFavouriteList(context, songObj);
+                Toast.makeText(context, "Removed from favourites", Toast.LENGTH_SHORT).show();
+                btnFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_favourite));
+                return;
+            }
+        }
+
+        try {
+            Utility.addToFavouriteList(context, songObj);
+            btnFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_p_favourite_recognised));
+            Toast.makeText(context, "Added to favourites", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.d("FAVOURITE ERROR :", e.getMessage());
+        }
+    }
+
 
     private void shuffle(boolean isShuffleOn) {
         if(isShuffleOn){
@@ -388,6 +478,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         SongsListActivity.checkIfUiNeedsToUpdate = true;
+        PlayingQueueActivity.checkIfPlayingQueueUiNeedsToUpdate = true;
         super.onBackPressed();
     }
 
@@ -494,6 +585,51 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    private void getFavouriteList(){
+        Favourites favourites = new Favourites(context);
+        SharedPreferences preferences = getSharedPreferences(favourites.fileName,Context.MODE_PRIVATE);
+        SongsListActivity.favourite_list = favourites.load();
+        for(String name : SongsListActivity.favourite_list){
+            Log.i("FavSong :",name);
+        }
+    }
+
+    public void changeStatusBarColor(){
+        // if (android.os.Build.VERSION.SDK_INT >= 21) {
+        Window window = this.getWindow();
+        //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.colorGrey));
+        // }
+    }
+
+    public void changeStatusBarColor2(int color){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(color);
+    }
+
+    public int calculateAverageColor(android.graphics.Bitmap bitmap, int pixelSpacing) {
+        int R = 0; int G = 0; int B = 0;
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int n = 0;
+        int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i = 0; i < pixels.length; i += pixelSpacing) {
+            int color = pixels[i];
+            R += Color.red(color);
+            G += Color.green(color);
+            B += Color.blue(color);
+            n++;
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Color color = Color.valueOf(Color.rgb(R / n, G / n, B / n));
+        }
+        return Color.rgb(R / n, G / n, B / n);
+    }
+
 }
 
 
@@ -522,4 +658,11 @@ case R.id.action_delete:
                 }
 
                 break;
+
+
+                //        sharedPreference data for shuffle
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        SongsListActivity.isShuffleOn = sharedPreferences.getBoolean(getString(R.string.shuffle_music), false);
+//        SongsListActivity.repeatCount = sharedPreferences.getInt(getString(R.string.repeat_music),0);
+
  */
